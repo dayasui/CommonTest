@@ -1,0 +1,5 @@
+# Mac
+.DS_Store
+UnityExport/build
+parallel-unity-env.json
+env-*
