@@ -27,9 +27,9 @@ namespace ParallelCommon {
 #endif
             }
         }
-        private Constants.ApplicationID _applicationID = Constants.ApplicationID.None;
+        private int _applicationID = 0;
 
-        public Constants.ApplicationID ApplicationID
+        public int ApplicationID
         {
             get => this._applicationID;
             set => this._applicationID = value;

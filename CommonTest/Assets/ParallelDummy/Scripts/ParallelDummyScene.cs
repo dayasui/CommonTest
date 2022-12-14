@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using System;
-using System.Linq;
-using ParallelCommon;
 using UnityEngine.SceneManagement;
 
 namespace ParallelDummy {
@@ -20,45 +17,29 @@ namespace ParallelDummy {
         [SerializeField] private GameObject _appItemPrefab = null;
         [SerializeField] private Scrollbar _appScrollBar = null;
 
-        [SerializeField] private Constants.ApplicationID _applicationId;
+        [SerializeField] private int _appId;
         [SerializeField] private string _appName;
         [SerializeField] private int _appRequired;
-        
-        private int _id;
-        private string _name;
-        private string _token;
-        private string _device_id;
-        private string _server_url;
-        private int _ownerUserId = 0;
-        private int _userId = 0;
-        private bool _isOwner = false;
-        
-
         private bool _isBusy = false;
         private List<int> _userIDs = new List<int>();
         private List<RoomItem> _roomList = new List<RoomItem>();
-        private IParallelNetwork _parallelDummyNetwork = new ParallelDummyNetwork();
+        private ParallelCommon.IParallelNetwork _parallelDummyNetwork = new ParallelDummyNetwork();
         private ParallelDummyAPIs _parallelDummyAPIs = new ParallelDummyAPIs();
-        
+        private ParallelDummyEnvData _dummyEnvData = null;
 
         // Start is called before the first frame update
        private void Start() {
 
-            var dummyEnvData = ParallelDummyEnvProvider.Load();
-            var accountData = dummyEnvData.accounts[dummyEnvData.account_index];
-            this._id = accountData.id;
-            this._name = accountData.name;
-            this._token = accountData.token;
-            this._device_id = accountData.device_id;
-            this._server_url = dummyEnvData.server_url;
-            
+            this._dummyEnvData = ParallelDummyEnvProvider.Load();
+            var accountData = this._dummyEnvData.SelectAccount;
+
             this._isBusy = false;
             this._parallelDummyNetwork.ChatGroupID = -1;
             this._userIDs.Clear();
             this._buttonRootObject.SetActive(false);
-            this._userNameText.text = this._name;
+            this._userNameText.text = this._dummyEnvData.SelectAccount.name;
             this._roomList.Clear();
-            this._parallelDummyNetwork.Init(this._server_url, this._token, this._device_id);
+            this._parallelDummyNetwork.Init(this._dummyEnvData.server_url, this._dummyEnvData.SelectAccount.token, this._dummyEnvData.SelectAccount.device_id);
             this.createRooms();
         }
 
@@ -72,7 +53,7 @@ namespace ParallelDummy {
 
         private IEnumerator createRoomRoutine(UnityAction onComplete) {
             bool wait = true;
-            this._parallelDummyAPIs.Reset(this._parallelDummyNetwork, this._id, (data) => { wait = false; });
+            this._parallelDummyAPIs.Reset(this._parallelDummyNetwork, this._dummyEnvData.SelectAccount.id, (data) => { wait = false; });
             while (wait) {
                 yield return null;
             }
@@ -89,7 +70,7 @@ namespace ParallelDummy {
                 yield return null;
             }
             
-            Util.DestroyChildObject(this._roomContentRoot.transform);
+            ParallelCommon.Util.DestroyChildObject(this._roomContentRoot.transform);
             foreach (var group in dataArray.chat_groups) {
                 GameObject go = Instantiate(this._roomItemPrefab, this._roomContentRoot.transform);
                 RoomItem room = go.GetComponent<RoomItem>();
@@ -169,6 +150,8 @@ namespace ParallelDummy {
             }
 
             if (error != null) {
+                Debug.LogError("入室に失敗しました");
+                this._isBusy = false;
                 //DialogManager.Instance.OpenDialogDummyWarning(error, () => { this._isBusy = false; });
             } else {
                 this._buttonRootObject.SetActive(true);
@@ -179,14 +162,12 @@ namespace ParallelDummy {
                     // 途中入室処理
                     var roomSession = roomData.chat_group_room.chat_group_room_sessions[0];
                     this._parallelDummyNetwork.ChatGroupRoomSessionID = roomSession.id;
-                    this._ownerUserId = roomData.chat_group_room.chat_group_room_sessions[0].OwnerUserID;
+                    this._dummyEnvData.owner_user_id = roomData.chat_group_room.chat_group_room_sessions[0].OwnerUserID;
 
                     wait = true;
                     error = null;
-
-                    bool canObserve = false;
-                    this._parallelDummyAPIs.JoinSession(this._parallelDummyNetwork, this._userId, (j, e) => {
-                        ApplicationDataManager.Instance.IsObserver = canObserve;
+                    
+                    this._parallelDummyAPIs.JoinSession(this._parallelDummyNetwork, this._dummyEnvData.is_observer, this._dummyEnvData.SelectAccount.id, (j, e) => {
                         wait = false;
                         error = e;
                     });
@@ -255,7 +236,9 @@ namespace ParallelDummy {
             }
             
             if (this._userIDs.Count < this._appRequired) {
-                string message = string.Format("ルーム参加者が足りません", this._id, this._name);
+                Debug.LogError("ルーム参加者が足りません");
+                this._isBusy = false;
+                //string message = string.Format("ルーム参加者が足りません", this._dummyEnvData.SelectAccount.id, this._dummyEnvData.SelectAccount.name);
                 //DialogManager.Instance.OpenDialogDummyWarning(message, () => { this._isBusy = false; });
                 yield break;
             }
@@ -263,29 +246,62 @@ namespace ParallelDummy {
             //common.UserDataManager.Instance.SetUsersData(userList.users);
 
             if (isOwner) {
-                // CreateRoomSessionを呼んだユーザーがオーナーになる
-                this._isOwner = true;
                 // ルームセッション作成
-                this._parallelDummyAPIs.CreateRoomSession(this._parallelDummyNetwork, this._applicationId,
+                this._parallelDummyAPIs.CreateRoomSession(this._parallelDummyNetwork, this._appId,
                     this._userIDs.ToArray(), (sessionData) => {
                         if (sessionData.chat_group_room_session.id == 0) {
                             string message = string.Format("ルームセッション生成に失敗しました");
                             //DialogManager.Instance.OpenDialogDummyWarning(message, () => { this._isBusy = false; });
                         } else {
                             this._parallelDummyNetwork.ChatGroupRoomSessionID = sessionData.chat_group_room_session.id;
+                            // 自分自身をオーナーにする
+                            this._dummyEnvData.owner_user_id = this._dummyEnvData.SelectAccount.id;
                             this.changeScene();
                         }
                     });
             } else {
-                this._isOwner = false;
-                this.changeScene();
+                this._parallelDummyAPIs.GetChatRoomSessionID(this._parallelDummyNetwork, (json) => {
+                    // オーナー以外はここで、chat_group_room_session_idを取得する
+                    JSONObject jsonObj = new JSONObject(json);
+                    var roomSessions = jsonObj.GetField("chat_group_room")
+                        .GetField("chat_group_room_sessions").list;
+                    this._parallelDummyNetwork.ChatGroupRoomSessionID =
+                        (int) roomSessions[0].GetField("id").i;
+
+                    // 一人退室用にchat_group_room_session_user_idを取得する
+                    var roomSessionUsers =
+                        roomSessions[0].GetField("chat_group_room_session_users").list;
+                    foreach (var roomSessionUser in roomSessionUsers) {
+                        var userID = (int) roomSessionUser.GetField("user").GetField("id").i;
+                        if (userID == this._dummyEnvData.SelectAccount.id) {
+                            this._parallelDummyNetwork.ChatGroupRoomSessionUserID =
+                                (int) roomSessionUser.GetField("id").i;
+                        }
+
+                        ParallelCommon.ParallelChatRoomSessionData.SessionUser userData =
+                            JsonUtility.FromJson<ParallelCommon.ParallelChatRoomSessionData.SessionUser>(
+                                roomSessionUser.ToString());
+                        // オーナーのユーザIDを保持しておく
+                        if (userData.is_owner) {
+                            this._dummyEnvData.owner_user_id = userData.user.id;
+                        }
+                    }
+
+                    this.changeScene();
+                });
             }
 
             this._isBusy = false;
         }
 
         private void changeScene() {
-            SceneManager.LoadScene("ParallelEntryScene", LoadSceneMode.Additive);
+            this._dummyEnvData.chat_group_id = _parallelDummyNetwork.ChatGroupID;
+            this._dummyEnvData.chat_group_roomID = _parallelDummyNetwork.ChatGroupRoomID;
+            this._dummyEnvData.chat_group_roomSessionID = _parallelDummyNetwork.ChatGroupRoomSessionID;
+            this._dummyEnvData.chat_group_roomSessionUserID = _parallelDummyNetwork.ChatGroupRoomSessionUserID;
+            var json = JsonUtility.ToJson(this._dummyEnvData);
+            ParallelDummyEnvProvider.Save(json);
+            SceneManager.LoadScene("ParallelEntryScene");
         }
     }
 }

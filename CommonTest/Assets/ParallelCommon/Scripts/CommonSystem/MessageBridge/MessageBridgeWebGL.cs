@@ -66,9 +66,9 @@ namespace ParallelCommon {
             // TODO
         }
         
-        public void GetAppID(UnityAction<Constants.ApplicationID> callBack) {
+        public void GetAppID(UnityAction<int> callBack) {
             // TODO
-            callBack?.Invoke((Constants.ApplicationID)0);
+            callBack?.Invoke(0);
         }
         
         public void ResetSession() {

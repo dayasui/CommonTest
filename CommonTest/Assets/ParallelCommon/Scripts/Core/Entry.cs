@@ -27,120 +27,47 @@ namespace ParallelCommon {
     }
     public class Entry : MonoBehaviour {
 
+        private bool _isStandAlone = false;
+        private int _appId;
+        private int _id;
+        private string _name;
+        private string _token;
+        private string _device_id;
+        private string _server_url;
+
         void Awake() {
             SceneManager.LoadScene("ParallelManagerScene", LoadSceneMode.Additive);
         }
         
         // Start is called before the first frame update
         private void Start() {
-            /*
-            MessageBridgeManager.Instance.HideNextContentList();
-            MessageBridgeManager.Instance.GetAppID((Constants.ApplicationID applicationID) => {
-                ApplicationDataManager.Instance.ApplicationID = applicationID;
-                //StartUp();
-            })
-            */
-            SceneManager.UnloadSceneAsync("ParallelEntryScene");
-            SceneManager.LoadScene("MessageBridgeTestScene", LoadSceneMode.Additive);
-            
-        }
-        
-        /*
-        public void StartUp() {
-            Constants.ApplicationID applicationID = ApplicationDataManager.Instance.ApplicationID;
-            if (ApplicationDataManager.Instance.IsStandAlone) {
-                networkInitializeStandAlone(() => {
-                    MySceneManager.Instance.ChangeScene(data.sceneType);
-                });
-            } else {
-#if !UNITY_WEBGL
-                networkInitialize(() => {
-                    MySceneManager.Instance.ChangeScene(data.sceneType);
-                });
-#else
-                //networkInitializeWebGL(() => {
-                //    MySceneManager.Instance.ChangeScene(data.sceneType);
-                //});
-                networkInitialize(() => {
-                    MySceneManager.Instance.ChangeScene(data.sceneType);
-                });
-#endif
-            }
-            
-        }
-        */
-
-        /*
-        /// <summary>
-        /// （基本的に）Unity　Editor用の処理
-        /// </summary>
-        static private void networkInitializeStandAlone(UnityAction onComplete) {
-#if !UNITY_WEBGL || UNITY_EDITOR
-            NetworkNetworkManager.Instance.GetChatRoomSessionID((json) => {
-                // オーナー以外はここで、chat_group_room_session_idを取得する
-                JSONObject jsonObj = new JSONObject(json);
-                var roomSessions = jsonObj.GetField("chat_group_room")
-                    .GetField("chat_group_room_sessions").list;
-                NetworkManager.Instance.ChatGroupRoomSessionID =
-                    (int)roomSessions[0].GetField("id").i;
-
-                // 一人退室用にchat_group_room_session_user_idを取得する
-                var roomSessionUsers =
-                    roomSessions[0].GetField("chat_group_room_session_users").list;
-                foreach (var roomSessionUser in roomSessionUsers) {
-                    var userID = (int)roomSessionUser.GetField("user").GetField("id").i;
-                    if (userID == UserDataManager.UserID) {
-                        NetworkManager.Instance.ChatGroupRoomSessionUserID =
-                            (int)roomSessionUser.GetField("id").i;
-                    }
-                    ParallelChatRoomSessionData.SessionUser userData = JsonUtility.FromJson<ParallelChatRoomSessionData.SessionUser>(roomSessionUser.ToString());
-                    // オーナーのユーザIDを保持しておく
-                    if (userData.is_owner) {
-                        UserDataManager.OwnerUserID = userData.user.id;
-                    }
-                    UserDataManager.Instance.AddUsersData(userData);
-                }
-                updateWebSocketEndPoint(() => {
-                    Receiver.Instance.ConnectWebSocket(() => {
-                        if (onComplete != null) {
-                            onComplete();
-                        }
-                    });
-                });
+            Initialize(() => {
+                //MySceneManager.Instance.ChangeScene(data.sceneType);
             });
-#else
-            // WEBGL?
-            //debugSetCookies();
-            networkInitializeWebGL(onComplete);
-#endif
-
+            MessageBridgeManager.Instance.HideNextContentList();
         }
-        */
 
-        /*
-        /// <summary>
-        /// （基本的に）実機用の処理
-        /// </summary>
-        /// <param name="onComplete"></param>
-        static private void networkInitialize(UnityAction onComplete) {
-            UnityMessageManagerWrapper.Instance.GetInitValue((initData) => {
+        private void Initialize(UnityAction onComplete) {
+            MessageBridgeManager.Instance.GetInitValue((initData) => {
                 NetworkManager.Instance.Init(initData.api_host, initData.token, initData.device_id,
                     initData.platform, initData.app_version, initData.accept_language);
                 NetworkManager.Instance.ChatGroupID = initData.chat_group_id;
                 NetworkManager.Instance.ChatGroupRoomID = initData.chat_group_room_id;
-                common.UserDataManager.UserID = initData.user_id;
+                UserDataManager.UserID = initData.user_id;
                 ApplicationDataManager.Instance.IsObserver = initData.is_observer;
 
-                UnityMessageManagerWrapper.Instance.GetChatRoomSession((sessionData) => {
+                MessageBridgeManager.Instance.GetChatRoomSession((sessionData) => {
                     NetworkManager.Instance.ChatGroupRoomSessionID = sessionData.chat_group_room_session.id;
                     Debug.Log($"ChatGroupRoomSessionID:{NetworkManager.Instance.ChatGroupRoomSessionID }");
                     updateWebSocketEndPoint(() => {
-                        Receiver.Instance.ConnectWebSocket(() => {
+                        
+                        //Receiver.Instance.ConnectWebSocket(() => {
+                            
                             var sessionUser =
                                 sessionData.chat_group_room_session.chat_group_room_session_users.FirstOrDefault(
-                                    e => e.user.id == common.UserDataManager.UserID);
+                                    e => e.user.id == UserDataManager.UserID);
                             if (sessionUser != null) {
-                                common.UserDataManager.IsOwner = sessionUser.is_owner;
+                                UserDataManager.IsOwner = sessionUser.is_owner;
                                 foreach (var user in sessionData.chat_group_room_session
                                     .chat_group_room_session_users) {
                                     // オーナーのユーザIDを保持しておく
@@ -157,12 +84,12 @@ namespace ParallelCommon {
                             if (onComplete != null) {
                                 onComplete();
                             }
-                        });
+                        //});
                     });
                 });
-            }, ApplicationDataManager.Instance.IsParallelDummy);
+            });
         }
-        */
+        
 
         /*
         /// <summary>
@@ -172,13 +99,13 @@ namespace ParallelCommon {
         static private void networkInitializeWebGL(UnityAction onComplete) {
             Debug.Log("networkInitializeWebGL");
 
-            UnityMessageManagerWrapper.Instance.GetInitValue((initData) => {
+            MessageBridgeManager.Instance.GetInitValue((initData) => {
                 NetworkManager.Instance.Init(initData.api_host, initData.token, initData.device_id,
                     initData.platform, initData.app_version, initData.accept_language);
                 NetworkManager.Instance.ChatGroupID = initData.chat_group_id;
                 NetworkManager.Instance.ChatGroupRoomID = initData.chat_group_room_id;
                 NetworkManager.Instance.ChatGroupRoomSessionID = initData.chat_group_room_session_id;
-                common.UserDataManager.UserID = initData.user_id;
+                UserDataManager.UserID = initData.user_id;
                 ApplicationDataManager.Instance.IsObserver = initData.is_observer;
 
                 Debug.Log($"ChatGroupID:{NetworkManager.Instance.ChatGroupID}");
@@ -186,7 +113,7 @@ namespace ParallelCommon {
                 Debug.Log($"ChatGroupRoomSessionID:{NetworkManager.Instance.ChatGroupRoomSessionID}");
 
                 initializeWebGLCore(onComplete);
-            }, ApplicationDataManager.Instance.IsParallelDummy);
+            });
         }
         */
 
@@ -197,7 +124,7 @@ namespace ParallelCommon {
                 NetworkManager.Instance.GeneralAPIGetInfo((sessionData) => {
                     Receiver.Instance.ConnectWebSocket(() => {
                         Debug.Log($"UserID:{UserDataManager.UserID} OwnerUserID:{sessionData.OwnerUserID}");
-                        common.UserDataManager.IsOwner = sessionData.OwnerUserID == UserDataManager.UserID;
+                        UserDataManager.IsOwner = sessionData.OwnerUserID == UserDataManager.UserID;
 
                         List<ParallelChatRoomSessionData.SessionUser> sessionUsers = new List<ParallelChatRoomSessionData.SessionUser>();
 
@@ -236,8 +163,8 @@ namespace ParallelCommon {
         }
         */
 
-        /*
-        static private void updateWebSocketEndPoint(UnityAction onComplete) {
+        
+        private void updateWebSocketEndPoint(UnityAction onComplete) {
 #if !UNITY_WEBGL
             NetworkManager.Instance.UpdateWebSocketEndPoint(onComplete);
 #else
@@ -247,6 +174,6 @@ namespace ParallelCommon {
             });
 #endif
         }
-        */
+        
     }
 }

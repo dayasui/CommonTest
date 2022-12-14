@@ -235,7 +235,7 @@ namespace ParallelDummy {
          -d "{\"chat_group_room_session_user\":{\"user_id\":${USER_ID}},\"is_owner\":false}"
          -X POST ${SERVER}/v1/chat_groups/${CHAT_GROUP_ID}/chat_group_rooms/${CHAT_GROUP_ROOM_ID}/chat_group_room_sessions/${CHAT_GROUP_ROOM_SESSION_ID}/chat_group_room_session_users
         */
-        public void JoinSession(IParallelNetwork parallelNetwork, int userId, UnityAction<JSONObject, string> onComplete) {
+        public void JoinSession(IParallelNetwork parallelNetwork, bool isObserver, int userId, UnityAction<JSONObject, string> onComplete) {
             string url =
                 $"{parallelNetwork.Server}/v1/chat_groups/{parallelNetwork.ChatGroupID}/chat_group_rooms/{parallelNetwork.ChatGroupRoomID}/chat_group_room_sessions/{parallelNetwork.ChatGroupRoomSessionID}/chat_group_room_session_users";
 
@@ -243,7 +243,7 @@ namespace ParallelDummy {
 
             Dictionary<string, string> header = parallelNetwork.CreateHeaderBase(parallelNetwork.Token, parallelNetwork.DeviceID);
             header.Add("Content-Type", "application/json");
-            string is_observer = parallelNetwork.IsObserver ? "true" : "false"; // {isObserver}だと"True" or "False"になってサーバが受付けない
+            string is_observer = isObserver ? "true" : "false"; // {isObserver}だと"True" or "False"になってサーバが受付けない
             string dataStr =
                 $"{{\"chat_group_room_session_user\":{{\"user_id\":{userId},\"is_owner\":false,\"is_observer\":{is_observer}}}}}";
             NetworkParam nParam = new NetworkParam();
@@ -340,7 +340,7 @@ namespace ParallelDummy {
          -d "{\"chat_group_room_session\":{\"app_type\":\"internal\",\"app_id\":3,\"user_ids\":${USER_IDS}}}" \
          -X POST ${SERVER}/v1/chat_groups/${CHAT_GROUP_ID}/chat_group_rooms/${CHAT_GROUP_ROOM_ID}/chat_group_room_sessions
         */
-        public void CreateRoomSession(IParallelNetwork parallelNetwork, Constants.ApplicationID appID, int[] userIDs, UnityAction<ParallelChatRoomSessionDataAll> onComplete) {
+        public void CreateRoomSession(IParallelNetwork parallelNetwork, int appID, int[] userIDs, UnityAction<ParallelChatRoomSessionDataAll> onComplete) {
             string url = parallelNetwork.Server + "/v1/chat_groups/" + parallelNetwork.ChatGroupID + "/chat_group_rooms/" + parallelNetwork.ChatGroupRoomID +
                          "/chat_group_room_sessions";
 
@@ -358,7 +358,7 @@ namespace ParallelDummy {
             }
 
             userIDsStr += "]";
-            int app_id = (int) appID;
+            int app_id = appID;
 
             string data =
                 $"{{\"chat_group_room_session\":{{\"app_type\":\"internal\",\"app_id\":{app_id},\"user_ids\":{userIDsStr}}}}}";
@@ -376,6 +376,16 @@ namespace ParallelDummy {
                     onComplete(sessionData);
                 }
             });
+        }
+        
+        // GET /v1/chat_groups/:chat_group_id/chat_group_rooms/:chat_group_room_id/chat_group_room_users
+        public void GetChatRoomSessionID(IParallelNetwork parallelNetwork, UnityAction<string> onComplete = null) {
+            NetworkParam param = new NetworkParam();
+            param.url = string.Format("{0}/v1/chat_groups/{1}/chat_group_rooms/{2}/chat_group_room_users",
+                parallelNetwork.Server, parallelNetwork.ChatGroupID, parallelNetwork.ChatGroupRoomID);
+            param.httpMethods = HTTPMethods.Get;
+            param.header = parallelNetwork.CreateHeaderBase(parallelNetwork.Token, parallelNetwork.DeviceID);
+            parallelNetwork.RequestCore(param, onComplete);
         }
 
         // UnityWebRequestのテストコード

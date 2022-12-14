@@ -1,11 +1,6 @@
 namespace ParallelCommon {
     public class Constants {
         public static readonly int FRAME_RATE = 30;
-        public enum ApplicationID {
-            None = 0,
-            MultiGameWebGL = 35,
-        }
-
         public enum NetResultCode {
             Ok = 200,
         }

@@ -7,7 +7,7 @@ namespace ParallelCommon {
         void GetInitValue(UnityAction<ParallelInitData> callBack);
         void GetChatRoomSession(UnityAction<ParallelChatRoomSessionDataAll> callBack);
         void SendLog(string eventName, string key, string value);
-        void GetAppID(UnityAction<Constants.ApplicationID> callBack);
+        void GetAppID(UnityAction<int> callBack);
         void ResetSession();
         void ShowHeader();
         void HideHeader();

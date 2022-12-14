@@ -15,8 +15,8 @@ namespace ParallelCommon {
         }
         public void SendLog(string eventName, string key, string value) { }
 
-        public void GetAppID(UnityAction<Constants.ApplicationID> callBack) {
-            callBack?.Invoke((Constants.ApplicationID)0);
+        public void GetAppID(UnityAction<int> callBack) {
+            callBack?.Invoke(0);
         }
         public void ResetSession() { }
         public void ShowHeader() { }

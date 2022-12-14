@@ -35,9 +35,9 @@ namespace ParallelCommon {
             NativeAPI.SendLog(eventName, key, value);
         }
         
-        public void GetAppID(UnityAction<Constants.ApplicationID> callBack) {
+        public void GetAppID(UnityAction<int> callBack) {
             int appID = NativeAPI.GetAppId();
-            callBack?.Invoke((Constants.ApplicationID)appID);
+            callBack?.Invoke(appID);
         }
         
         public void ResetSession() {

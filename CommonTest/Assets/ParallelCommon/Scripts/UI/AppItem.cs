@@ -10,11 +10,11 @@ namespace ParallelCommon {
         [SerializeField]
         private Text _text;
 
-        private Constants.ApplicationID _appID;
-        public Constants.ApplicationID AppID => _appID;
-        private UnityAction<Constants.ApplicationID> _onClick;
+        private int _appID;
+        public int AppID => _appID;
+        private UnityAction<int> _onClick;
 
-        public void Init(Constants.ApplicationID id, string text, UnityAction<Constants.ApplicationID> onClick) {
+        public void Init(int id, string text, UnityAction<int> onClick) {
             this._appID = id;
             this._text.text = text;
             this._onClick = onClick;

@@ -51,12 +51,27 @@ namespace ParallelDummy {
             if (GUILayout.Button("Save")) {
                 Save(_dataSO.data);
             }
+            if (GUILayout.Button("LeaveRoom")) {
+                LeaveRoom();
+            }
         }
 
         public static void Save(ParallelDummyEnvData envData) {
             var serializeText = JsonUtility.ToJson(envData);
             File.WriteAllText(Path, serializeText);
             AssetDatabase.ImportAsset(Path);
+        }
+        
+        public static void LeaveRoom() {
+            ParallelDummyAPIs apis = new ParallelDummyAPIs();
+            ParallelCommon.IParallelNetwork parallelDummyNetwork = new ParallelDummyNetwork();
+            parallelDummyNetwork.ChatGroupID = _dataSO.data.chat_group_id;
+            parallelDummyNetwork.ChatGroupRoomID = _dataSO.data.chat_group_roomID;
+            parallelDummyNetwork.ChatGroupRoomSessionID = _dataSO.data.chat_group_roomSessionID;
+            parallelDummyNetwork.Init(_dataSO.data.server_url, _dataSO.data.SelectAccount.token, _dataSO.data.SelectAccount.device_id);
+            apis.LeaveRoom(parallelDummyNetwork, () => {
+                
+            });
         }
         
         public static ParallelDummyEnvData Load() {

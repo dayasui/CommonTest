@@ -10,8 +10,10 @@ namespace ParallelCommon {
     public class MessageBridgeManager : SingletonMonoBehaviour<MessageBridgeManager> {
         private IMessageBridge _messageBridge;
         protected override void Awake() {
-            
-#if UNITY_IOS
+      
+#if UNITY_EDITOR
+            this._messageBridge = new MessageBridgeEditor();
+#elif UNITY_IOS
             this._messageBridge = new MessageBridgeIOS();
 #elif UNITY_ANDROID
             this._messageBridge = new MessageBridgeAndroid();
@@ -35,7 +37,7 @@ namespace ParallelCommon {
         public void SendLog(string eventName, string key, string value) =>
             this._messageBridge.SendLog(eventName, key, value);
 
-        public void GetAppID(UnityAction<Constants.ApplicationID> callBack) => this._messageBridge.GetAppID(callBack);
+        public void GetAppID(UnityAction<int> callBack) => this._messageBridge.GetAppID(callBack);
         public void ResetSession() => this._messageBridge.ResetSession();
         public void ShowHeader() => this._messageBridge.ShowHeader();
         public void HideHeader() => this._messageBridge.HideHeader();

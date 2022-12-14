@@ -61,11 +61,11 @@ namespace ParallelCommon {
             });
         }
         
-        public void GetAppID(UnityAction<Constants.ApplicationID> callBack) {
+        public void GetAppID(UnityAction<int> callBack) {
             this.SendMessageWrapper<string>("getAppID", null, (json) => {
                 JSONObject jsonObj = new JSONObject(json);
                 int appID = (int)jsonObj.GetField("app_id").i;
-                callBack?.Invoke((Constants.ApplicationID)appID);
+                callBack?.Invoke(appID);
             });
         }
         

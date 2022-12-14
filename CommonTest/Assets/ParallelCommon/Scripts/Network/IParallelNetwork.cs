@@ -14,7 +14,6 @@ namespace ParallelCommon {
         int ChatGroupRoomID { get; set; }
         int ChatGroupRoomSessionID { get; set; }
         int ChatGroupRoomSessionUserID { get; set; }
-        bool IsObserver { get; }
         int Port { get; set; }
         void Init(string server, string token, string device_id, string platform = "", string version = "",
             string language = "");

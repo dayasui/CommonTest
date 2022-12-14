@@ -99,15 +99,14 @@ namespace ParallelCommon {
             return userData;
         }
 
-        // TODO
-        /*
+        
         public void AddUsersData(ParallelChatRoomSessionData.SessionUser data) {
             if (this._userList.FirstOrDefault(e => e.user.id == data.user.id) == null) {
                 data.user.name = StringUtil.ReplaceEmoji(data.user.name, "□");
                 this._userList.Add(data);
             }
         }
-        */
+        
 
         // TODO
         /*
