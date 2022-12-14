@@ -38,7 +38,8 @@ namespace ParallelDummy {
     
     public static class ParallelDummyEnvProvider {
         public static string Path() {
-            return "Assets/ParallelDummy/Resources/parallel-dummy-env.json";
+            //return "Assets/ParallelDummy/Resources/parallel-dummy-env.json";
+            return "../parallel-dummy-env.json";
         }
 
 

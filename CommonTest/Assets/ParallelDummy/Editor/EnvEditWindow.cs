@@ -6,8 +6,6 @@ using UnityEngine;
 
 namespace ParallelDummy {
     public class EnvEditWindow : EditorWindow {
-        private static string Path => "Assets/ParallelDummy/Resources/parallel-dummy-env.json";
-
         private static ParallelDummyEnvDataSO _dataSO = null;
         
         [MenuItem("Tools/DummyEnvEditor")]
@@ -38,7 +36,7 @@ namespace ParallelDummy {
 
             using (new GUILayout.VerticalScope()) {
                 this._scrollPosition = EditorGUILayout.BeginScrollView(this._scrollPosition);
-                EditorGUILayout.LabelField(Path);
+                EditorGUILayout.LabelField(ParallelDummyEnvProvider.Path());
                 EditorGUILayout.Space(4);
                 ScriptableObject target = _dataSO;
                 SerializedObject so = new SerializedObject(target);
@@ -58,8 +56,8 @@ namespace ParallelDummy {
 
         public static void Save(ParallelDummyEnvData envData) {
             var serializeText = JsonUtility.ToJson(envData);
-            File.WriteAllText(Path, serializeText);
-            AssetDatabase.ImportAsset(Path);
+            File.WriteAllText(ParallelDummyEnvProvider.Path(), serializeText);
+            AssetDatabase.ImportAsset(ParallelDummyEnvProvider.Path());
         }
         
         public static void LeaveRoom() {
@@ -75,12 +73,12 @@ namespace ParallelDummy {
         }
         
         public static ParallelDummyEnvData Load() {
-            if (!File.Exists(Path)) {
+            if (!File.Exists(ParallelDummyEnvProvider.Path())) {
                 Save(new ParallelDummyEnvData());
             }
 
             string text = "";
-            text = File.ReadAllText(Path);
+            text = File.ReadAllText(ParallelDummyEnvProvider.Path());
             if (!string.IsNullOrEmpty(text)) {
                 return JsonUtility.FromJson<ParallelDummyEnvData>(text);
             }
