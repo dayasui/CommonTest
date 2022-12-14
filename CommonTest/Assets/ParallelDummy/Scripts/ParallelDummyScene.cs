@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -13,13 +16,6 @@ namespace ParallelDummy {
         [SerializeField] private GameObject _roomContentRoot = null;
         [SerializeField] private GameObject _roomItemPrefab = null;
         [SerializeField] private GameObject _buttonRootObject = null;
-        [SerializeField] private GameObject _appContentRoot = null;
-        [SerializeField] private GameObject _appItemPrefab = null;
-        [SerializeField] private Scrollbar _appScrollBar = null;
-
-        [SerializeField] private int _appId;
-        [SerializeField] private string _appName;
-        [SerializeField] private int _appRequired;
         private bool _isBusy = false;
         private List<int> _userIDs = new List<int>();
         private List<RoomItem> _roomList = new List<RoomItem>();
@@ -28,11 +24,9 @@ namespace ParallelDummy {
         private ParallelDummyEnvData _dummyEnvData = null;
 
         // Start is called before the first frame update
-       private void Start() {
-
-            this._dummyEnvData = ParallelDummyEnvProvider.Load();
-            var accountData = this._dummyEnvData.SelectAccount;
-
+        private void Start() {
+           this._dummyEnvData = ParallelDummyEnvProvider.Load();
+            this._titleText.text = this._dummyEnvData.app_name;
             this._isBusy = false;
             this._parallelDummyNetwork.ChatGroupID = -1;
             this._userIDs.Clear();
@@ -235,7 +229,7 @@ namespace ParallelDummy {
                 this._userIDs.Add(user.id);
             }
             
-            if (this._userIDs.Count < this._appRequired) {
+            if (this._userIDs.Count < this._dummyEnvData.app_required) {
                 Debug.LogError("ルーム参加者が足りません");
                 this._isBusy = false;
                 //string message = string.Format("ルーム参加者が足りません", this._dummyEnvData.SelectAccount.id, this._dummyEnvData.SelectAccount.name);
@@ -247,7 +241,7 @@ namespace ParallelDummy {
 
             if (isOwner) {
                 // ルームセッション作成
-                this._parallelDummyAPIs.CreateRoomSession(this._parallelDummyNetwork, this._appId,
+                this._parallelDummyAPIs.CreateRoomSession(this._parallelDummyNetwork, this._dummyEnvData.app_id,
                     this._userIDs.ToArray(), (sessionData) => {
                         if (sessionData.chat_group_room_session.id == 0) {
                             string message = string.Format("ルームセッション生成に失敗しました");

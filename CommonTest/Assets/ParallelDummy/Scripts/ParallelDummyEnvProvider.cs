@@ -12,6 +12,9 @@ namespace ParallelDummy {
 
     [System.Serializable]
     public class ParallelDummyEnvData {
+        public int app_id;
+        public string app_name;
+        public int app_required;
         public bool is_observer;
         public int account_index;
         public string server_url;
