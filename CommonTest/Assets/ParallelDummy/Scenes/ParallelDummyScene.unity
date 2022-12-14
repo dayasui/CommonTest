@@ -877,12 +877,6 @@ MonoBehaviour:
   _roomItemPrefab: {fileID: 4468051465286233473, guid: 15ba4d6aed0ec473784249f473f124d8,
     type: 3}
   _buttonRootObject: {fileID: 1412988924}
-  _appContentRoot: {fileID: 0}
-  _appItemPrefab: {fileID: 0}
-  _appScrollBar: {fileID: 0}
-  _applicationId: 35
-  _appName: "\u30DE\u30EB\u30C1\u30B2\u30FC\u30E0WebGL"
-  _appRequired: 1
 --- !u!1 &949699611
 GameObject:
   m_ObjectHideFlags: 0
@@ -1139,7 +1133,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5165\u5BA4(\u30AA\u30FC\u30CA\u30FC\u4EE5\u5916)"
+  m_Text: "\u30AA\u30FC\u30CA\u30FC\u4EE5\u5916"
 --- !u!222 &1115243118
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1739,7 +1733,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5165\u5BA4(\u30AA\u30FC\u30CA\u30FC)"
+  m_Text: "\u30AA\u30FC\u30CA\u30FC"
 --- !u!222 &1447250581
 CanvasRenderer:
   m_ObjectHideFlags: 0
