@@ -10,5 +10,15 @@ namespace ParallelCommon {
             Friend, // 友達と遊ぶ（ルーム内）
             Versus, // 対戦（ルーム同士）
         }
+        
+        public enum MatchingGameResult {
+            None,
+            [StringValue("win")]
+            Win,
+            [StringValue("lose")]
+            Lose,
+            [StringValue("draw")]
+            Draw,
+        }
     }
 }

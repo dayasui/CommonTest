@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace ParallelCommon {
-	public class Util {
+	public static class Util {
 		private static readonly string ELLIPSIS = "...";
 		
 		public static void DestroyChildObject(Transform parent_trans){
@@ -58,6 +58,21 @@ namespace ParallelCommon {
 			List<RaycastResult> result = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointer, result);
 			return (result.Count > 0);
+		}
+		
+		public static bool IsNullOrEmpty<T>(this ICollection<T> collection) {
+			return (collection == null || collection.Count == 0);
+		}
+
+		/// <summary>
+		/// lookupListにcontainingListが全て含まれているかどうか
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="containingList"></param>
+		/// <param name="lookupList"></param>
+		/// <returns></returns>
+		public static bool ContainsAll<T>(this IEnumerable<T> containingList, IEnumerable<T> lookupList) {
+			return !lookupList.Except(containingList).Any();
 		}
 	}
 }
