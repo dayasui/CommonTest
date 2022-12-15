@@ -349,7 +349,6 @@ namespace ParallelCommon {
             this.RequestCore(param, onComplete);
         }
 
-        /*
         public void DownLoadTexture2D(ParallelUserData userData, UnityAction<Texture2D> onComplete) {
             string url = userData.user_image;
             this.DownLoadTexture2D(url, onComplete);
@@ -359,6 +358,5 @@ namespace ParallelCommon {
             NetworkTextureDownload n = new NetworkTextureDownload();
             n.Send(url, onComplete);
         }
-        */
     }
 }
