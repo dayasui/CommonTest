@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using WebSocketSharp;
 
 namespace ParallelCommon {
 	public static class StringUtil {
@@ -47,6 +48,9 @@ namespace ParallelCommon {
 		}
 
 		public static string ReplaceEmoji(string src, string replace) {
+			if (src.IsNullOrEmpty()) {
+				return "";
+			}
 			string dst = "";
 			foreach (char c in src) {
 				if (char.IsHighSurrogate(c)) {

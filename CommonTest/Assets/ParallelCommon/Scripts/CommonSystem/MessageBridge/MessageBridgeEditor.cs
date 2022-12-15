@@ -25,8 +25,11 @@ namespace ParallelCommon {
             sessionData.chat_group_room_session = new ParallelChatRoomSessionData();
             sessionData.chat_group_room_session.chat_group_room_session_users =
                 new ParallelChatRoomSessionData.SessionUser[1];
+            sessionData.chat_group_room_session.chat_group_room_session_users[0] = new ParallelChatRoomSessionData.SessionUser();
             var sessionUser = sessionData.chat_group_room_session.chat_group_room_session_users[0];
+            sessionUser.user = new ParallelUserData();
             sessionUser.user.id = envData.SelectAccount.id;
+            sessionUser.user.name = envData.SelectAccount.name;
             sessionUser.is_owner = envData.owner_user_id == envData.SelectAccount.id;
             callBack?.Invoke(sessionData);
         }

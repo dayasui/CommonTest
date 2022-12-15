@@ -4,6 +4,9 @@ namespace ParallelCommon {
 
     [Serializable]
     public class ParallelUserData : ParallelUserDataBase {
+
+        public ParallelUserData() { }
+
         public ParallelUserData(ParalleWebGLlUserData src) {
             this.id = src.id;
             this.name = src.name;
