@@ -52,6 +52,7 @@ namespace ParallelCommon {
             return null;
         }
 #else
+/*
     public static void SaveParallelUnityEnv(ParallelUnityEnvData envData, ParallelUnityEnvType type) {
     }
     public static ParallelUnityEnvData LoadParallelUnityEnv(ParallelUnityEnvType type = ParallelUnityEnvType.None) {
@@ -67,7 +68,7 @@ namespace ParallelCommon {
         }
         return null;
     }
-
+*/
 #endif
 
         //    public static EnvData LoadEnv() {

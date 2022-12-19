@@ -1,6 +1,6 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
-using BestHTTP.JSON;
 using ParallelCommon;
 using UnityEngine;
 using UnityEngine.UI;
@@ -315,3 +315,4 @@ namespace ParallelDummy {
         }
     }
 }
+#endif

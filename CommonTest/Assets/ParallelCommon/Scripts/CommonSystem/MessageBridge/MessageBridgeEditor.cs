@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -72,3 +72,4 @@ namespace ParallelCommon {
         public void CloseWebView() { }
     }
 }
+#endif

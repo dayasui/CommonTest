@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
-using WebSocketSharp;
 
 namespace ParallelCommon {
     public class UserDataManager : SingletonMonoBehaviour<UserDataManager> {
@@ -100,17 +99,12 @@ namespace ParallelCommon {
             return userData;
         }
 
-        
         public void AddUsersData(ParallelChatRoomSessionData.SessionUser data) {
             if (this._userList.FirstOrDefault(e => e.user.id == data.user.id) == null) {
-                if (data.user.name.IsNullOrEmpty()) {
-                    data.user.name = "";
-                }
                 data.user.name = StringUtil.ReplaceEmoji(data.user.name, "□");
                 this._userList.Add(data);
             }
         }
-        
 
         // TODO
         /*
