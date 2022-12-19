@@ -260,9 +260,10 @@ namespace ParallelDummy {
                     // オーナー以外はここで、chat_group_room_session_idを取得する
                     JSONObject jsonObj = new JSONObject(json);
                     var chatGroupRoom = jsonObj.GetField("chat_group_room");
-                    var chatGroupRoomSessions = chatGroupRoom.GetField("chat_group_room_sessions").list;
+                    var roomSessions = chatGroupRoom.GetField("chat_group_room_sessions").list;
                     ParallelChatRoomSessionData roomSessionData =
-                        JsonUtility.FromJson<ParallelChatRoomSessionData>(chatGroupRoomSessions[0].ToString());
+                        JsonUtility.FromJson<ParallelChatRoomSessionData>(roomSessions[0].ToString());
+                    this._parallelDummyNetwork.ChatGroupRoomSessionID = (int)roomSessions[0].GetField("id").i;
                     var sessionUsers = roomSessionData.chat_group_room_session_users;
                     this._dummyEnvData.user.Clear();
                     foreach (var sessionUser in sessionUsers) {
