@@ -4,6 +4,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using ParallelCommon;
 
 namespace ParallelDummy {
     public class ParallelDummyEnvDataSO : ScriptableObject {
@@ -25,6 +26,8 @@ namespace ParallelDummy {
         public int chat_group_roomID;
         public int chat_group_roomSessionID;
         public int chat_group_roomSessionUserID;
+
+        public List<ParallelUserData> user = new List<ParallelUserData>();
         public ParallelAccountData SelectAccount => this.accounts[this.account_index];
     }
 

@@ -36,10 +36,8 @@ namespace ParallelCommon {
                         
                         //Receiver.Instance.ConnectWebSocket(() => {
 
-                            
-                            var sessionUser =
-                                sessionData.chat_group_room_session.chat_group_room_session_users.FirstOrDefault(
-                                    e => e.user?.id == UserDataManager.UserID);
+                            var sessionUsers = sessionData.chat_group_room_session.chat_group_room_session_users;
+                            var sessionUser = sessionUsers.FirstOrDefault(e => e.user?.id == UserDataManager.UserID);
                             if (sessionUser != null) {
                                 UserDataManager.IsOwner = sessionUser.is_owner;
                                 foreach (var user in sessionData.chat_group_room_session

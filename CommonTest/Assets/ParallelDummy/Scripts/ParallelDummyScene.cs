@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using BestHTTP.JSON;
+using ParallelCommon;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -22,7 +24,7 @@ namespace ParallelDummy {
 
         // Start is called before the first frame update
         private void Start() {
-           this._dummyEnvData = ParallelDummyEnvProvider.Load();
+            this._dummyEnvData = ParallelDummyEnvProvider.Load();
             this._titleText.text = this._dummyEnvData.app_name;
             this._isBusy = false;
             this._parallelDummyNetwork.ChatGroupID = -1;
@@ -245,8 +247,11 @@ namespace ParallelDummy {
                             //DialogManager.Instance.OpenDialogDummyWarning(message, () => { this._isBusy = false; });
                         } else {
                             this._parallelDummyNetwork.ChatGroupRoomSessionID = sessionData.chat_group_room_session.id;
-                            // 自分自身をオーナーにする
                             this._dummyEnvData.owner_user_id = this._dummyEnvData.SelectAccount.id;
+                            this._dummyEnvData.user.Clear();
+                            foreach (var sessionUser in sessionData.chat_group_room_session.chat_group_room_session_users) {
+                                this._dummyEnvData.user.Add(sessionUser.user);
+                            }
                             this.changeScene();
                         }
                     });
@@ -254,14 +259,23 @@ namespace ParallelDummy {
                 this._parallelDummyAPIs.GetChatRoomSessionID(this._parallelDummyNetwork, (json) => {
                     // オーナー以外はここで、chat_group_room_session_idを取得する
                     JSONObject jsonObj = new JSONObject(json);
+                    var chatGroupRoom = jsonObj.GetField("chat_group_room");
+                    var chatGroupRoomSessions = chatGroupRoom.GetField("chat_group_room_sessions").list;
+                    ParallelChatRoomSessionData roomSessionData =
+                        JsonUtility.FromJson<ParallelChatRoomSessionData>(chatGroupRoomSessions[0].ToString());
+                    var sessionUsers = roomSessionData.chat_group_room_session_users;
+                    this._dummyEnvData.user.Clear();
+                    foreach (var sessionUser in sessionUsers) {
+                        this._dummyEnvData.user.Add(sessionUser.user);
+                    }
+                    /*
                     var roomSessions = jsonObj.GetField("chat_group_room")
                         .GetField("chat_group_room_sessions").list;
                     this._parallelDummyNetwork.ChatGroupRoomSessionID =
                         (int) roomSessions[0].GetField("id").i;
-
+                    
                     // 一人退室用にchat_group_room_session_user_idを取得する
-                    var roomSessionUsers =
-                        roomSessions[0].GetField("chat_group_room_session_users").list;
+                    var roomSessionUsers = roomSessions[0].GetField("chat_group_room_session_users").list;
                     foreach (var roomSessionUser in roomSessionUsers) {
                         var userID = (int) roomSessionUser.GetField("user").GetField("id").i;
                         if (userID == this._dummyEnvData.SelectAccount.id) {
@@ -277,6 +291,7 @@ namespace ParallelDummy {
                             this._dummyEnvData.owner_user_id = userData.user.id;
                         }
                     }
+                    */
 
                     this.changeScene();
                 });

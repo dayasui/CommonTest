@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,13 +25,14 @@ namespace ParallelCommon {
             var sessionData = new ParallelChatRoomSessionDataAll();
             sessionData.chat_group_room_session = new ParallelChatRoomSessionData();
             sessionData.chat_group_room_session.chat_group_room_session_users =
-                new ParallelChatRoomSessionData.SessionUser[1];
-            sessionData.chat_group_room_session.chat_group_room_session_users[0] = new ParallelChatRoomSessionData.SessionUser();
-            var sessionUser = sessionData.chat_group_room_session.chat_group_room_session_users[0];
-            sessionUser.user = new ParallelUserData();
-            sessionUser.user.id = envData.SelectAccount.id;
-            sessionUser.user.name = envData.SelectAccount.name;
-            sessionUser.is_owner = envData.owner_user_id == envData.SelectAccount.id;
+                new ParallelChatRoomSessionData.SessionUser[envData.user.Count];
+            var sessionUsers = sessionData.chat_group_room_session.chat_group_room_session_users;
+
+            for (int i = 0; i < envData.user.Count; i++) {
+                sessionUsers[i] = new ParallelChatRoomSessionData.SessionUser();
+                sessionUsers[i].is_owner = envData.owner_user_id == envData.user[i].id;
+                sessionUsers[i].user = new ParallelUserData(envData.user[i]);
+            }
             callBack?.Invoke(sessionData);
         }
         
