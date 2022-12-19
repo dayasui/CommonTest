@@ -268,6 +268,9 @@ namespace ParallelDummy {
                     this._dummyEnvData.user.Clear();
                     foreach (var sessionUser in sessionUsers) {
                         this._dummyEnvData.user.Add(sessionUser.user);
+                        if (sessionUser.is_owner) {
+                            this._dummyEnvData.owner_user_id = sessionUser.user.id;
+                        }
                     }
                     /*
                     var roomSessions = jsonObj.GetField("chat_group_room")
