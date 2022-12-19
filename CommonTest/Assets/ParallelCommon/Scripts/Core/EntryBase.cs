@@ -46,7 +46,6 @@ namespace ParallelCommon {
                                     if (user.is_owner) {
                                         UserDataManager.OwnerUserID = user.user.id;
                                     }
-
                                     UserDataManager.Instance.AddUsersData(user);
                                 }
                             } else {

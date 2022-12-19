@@ -24,6 +24,7 @@ namespace ParallelCommon {
             var envData = ParallelDummy.ParallelDummyEnvProvider.Load();
             var sessionData = new ParallelChatRoomSessionDataAll();
             sessionData.chat_group_room_session = new ParallelChatRoomSessionData();
+            sessionData.chat_group_room_session.id = envData.chat_group_roomSessionID;
             sessionData.chat_group_room_session.chat_group_room_session_users =
                 new ParallelChatRoomSessionData.SessionUser[envData.user.Count];
             var sessionUsers = sessionData.chat_group_room_session.chat_group_room_session_users;
