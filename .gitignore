@@ -1,5 +1,7 @@
 # Mac
 .DS_Store
 UnityExport/build
-parallel-unity-env.json
+Unity-phone
+Unity-webgl
+parallel-dummy-env.json
 env-*
