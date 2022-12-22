@@ -6,13 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ParallelDummy/Scenes/ParallelDummyScene.unity
+    path: Assets/ParallelUnityPackage/ParallelDummy/Scenes/ParallelDummyScene.unity
     guid: 3201ed9ceb3b4463d8a298ed9156ff73
   - enabled: 1
-    path: Assets/ParallelCommon/Scenes/ParallelEntryScene.unity
+    path: Assets/ParallelUnityPackage/ParallelCommon/Scenes/ParallelEntryScene.unity
     guid: ce4f5330e66cb4312ae53c2169f9a080
   - enabled: 1
-    path: Assets/ParallelCommon/Scenes/ParallelManagerScene.unity
+    path: Assets/ParallelUnityPackage/ParallelCommon/Scenes/ParallelManagerScene.unity
     guid: 9503b8b742efe4bd69d35d55a70bd741
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: cd2423f46651c4b678e4ec1a42ccc186,
