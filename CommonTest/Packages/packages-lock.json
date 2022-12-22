@@ -7,8 +7,8 @@
       "dependencies": {},
       "hash": "284d5c50d3f1ddd9fa7df3d382ea904732a9c2ff"
     },
-    "com.parallel.common": {
-      "version": "file:ParallelCommon",
+    "com.parallelunity.package": {
+      "version": "file:ParallelUnityPackage",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

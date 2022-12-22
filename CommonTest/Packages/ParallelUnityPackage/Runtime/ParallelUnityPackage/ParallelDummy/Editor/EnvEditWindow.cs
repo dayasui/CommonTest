@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace ParallelDummy {
-    public class EnvEditWindow : EditorWindow {
+    public class DummyEnvEditWindow : EditorWindow {
         private static ParallelDummyEnvDataSO _dataSO = null;
         
         [MenuItem("Tools/DummyEnvEditor")]
@@ -19,7 +19,7 @@ namespace ParallelDummy {
             }
 
             LoadEnv();
-            EditorWindow.GetWindow(typeof(EnvEditWindow)).Show();
+            EditorWindow.GetWindow(typeof(DummyEnvEditWindow)).Show();
         }
 
         private static void LoadEnv() {

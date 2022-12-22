@@ -1,0 +1,10 @@
+{
+  "name": "com.parallelunity.package",
+  "displayName": "ParallelUnityPackage",
+  "version": "0.1.0",
+  "unity": "2021.1",
+  "description": "description.",
+  "author": {
+    "name": "ParallelUnityPackage"
+  }
+}
