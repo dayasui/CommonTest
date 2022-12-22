@@ -7,11 +7,17 @@ function test(parameter) {
 function getInitValue(parameter) {
     debuglog("called getInitValue in javascript");
 
-    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.firebase) {
+    if (window.ReactNativeWebView) {
+        // Call Android interface
+        window.ReactNativeWebView.postMessage(
+            JSON.stringify({command: 'getInitValue'}),
+        );
+        debuglog('android post command:getInitValue');
+    } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.firebase) {
         // Call iOS interface
         var message = { command: 'getInitValue'};
         window.webkit.messageHandlers.firebase.postMessage(message);
-        debuglog('post command:getInitValue');
+        debuglog('ios post command:getInitValue');
     } else {
         // No Android or iOS interface found
         debuglog('No native APIs found.');
@@ -29,11 +35,17 @@ window.getInitValueCallback = function(data) {
 function getSession(parameter) {
     debuglog("called getSession in javascript");
 
-    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.firebase) {
+    if (window.ReactNativeWebView) {
+        // Call Android interface
+        window.ReactNativeWebView.postMessage(
+            JSON.stringify({command: 'getSession'}),
+        );
+        debuglog('android post command:getSession');
+    } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.firebase) {
         // Call iOS interface
         var message = { command: 'getSession'};
         window.webkit.messageHandlers.firebase.postMessage(message);
-        debuglog('post command:getSession');
+        debuglog('ios post command:getSession');
     } else {
         // No Android or iOS interface found
         debuglog('No native APIs found.');
@@ -52,11 +64,17 @@ window.getSessionCallback = function(data) {
 function getAppId(parameter) {
     debuglog("called getAppId in javascript");
 
-    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.firebase) {
+    if (window.ReactNativeWebView) {
+        // Call Android interface
+        window.ReactNativeWebView.postMessage(
+            JSON.stringify({command: 'getAppId'}),
+        );
+        debuglog('android post command:getAppId');
+    } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.firebase) {
         // Call iOS interface
         var message = { command: 'getAppId'};
         window.webkit.messageHandlers.firebase.postMessage(message);
-        debuglog('post command:getAppId');
+        debuglog('ios post command:getAppId');
     } else {
         // No Android or iOS interface found
         debuglog('No native APIs found.');
