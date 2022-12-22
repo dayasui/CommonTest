@@ -18,11 +18,11 @@ namespace ParallelCommon {
         private static readonly string ENV_STAGING = "env-staging";
         private static readonly string ENV_PRODUCTION = "env-production";
         private static readonly string ENV_DEVELOPMENT = "env-development";
-        private static readonly string ENV_DIR = "";
+        private static readonly string ENV_DIR = "Assets/ParallelCommon/Resources/Env";
 
         
         public static string GetParallelUnityEnvFilePath() {
-            return Path.Combine("Assets/ParallelCommon/Resources/Env", $"{PARALLEL_UNITY_ENV}.json");
+            return Path.Combine(ENV_DIR, $"{PARALLEL_UNITY_ENV}.json");
         }
 
 

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using BestHTTP;
 using System;
 using ParallelCommon;
+using UnityEngine.Networking;
 
 
 namespace ParallelDummy {
@@ -397,7 +398,8 @@ namespace ParallelDummy {
             req.SetRequestHeader("X-Device-Id", "D363C93B-A9DE-4F7C-BD99-FC5B69A826A6");
             req.downloadHandler = (UnityEngine.Networking.DownloadHandler) new UnityEngine.Networking.DownloadHandlerBuffer();
             yield return req.SendWebRequest();
-            if (req.isNetworkError || req.isHttpError) {
+            if(req.result == UnityWebRequest.Result.ConnectionError ||
+               req.result == UnityWebRequest.Result.ProtocolError) {
                 Debug.Log("Network error:" + req.error);
             } else {
                 Debug.Log("Succeeded:" + req.downloadHandler.text);

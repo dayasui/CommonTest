@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 
 namespace ParallelCommon {
 	public static class Util {
-		private static readonly string ELLIPSIS = "...";
-		
 		public static void DestroyChildObject(Transform parent_trans){
 			for (int i = 0; i < parent_trans.childCount; ++i) {
 				GameObject.Destroy(parent_trans.GetChild(i).gameObject);
