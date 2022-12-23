@@ -6,5 +6,9 @@
   "description": "description.",
   "author": {
     "name": "ParallelUnityPackage"
+  },
+  "dependencies": {
+    "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
+    "com.unity.addressables": "1.19.19"
   }
 }
